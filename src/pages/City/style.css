@@ -10,4 +10,42 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 50%;
+}
+
+.principalInfo>div:nth-child(1){
+    width: '30%';
+}
+
+.principalInfo>div:nth-child(1) img{
+    width: '100%';
+}
+
+
+.main hgroup{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+    text-align: center;
+}
+
+.main hgroup span{
+    color: rgb(197, 197, 197);
+}
+
+.otherInfos div{
+    display: flex; 
+    justify-content: center;
+    width: 100%;
+}
+
+.otherInfos div div{
+    display: flex;
+    justify-content: flex-start;
+}
+
+.main hr{
+    width: 70%;
+    padding: 1rem 0;
 }

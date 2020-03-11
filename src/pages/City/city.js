@@ -1,40 +1,61 @@
-import React,{useContext} from 'react';
+import React,{useContext, useState} from 'react';
 import ThemeContext from "../../store/index";
+
 
 import './style.css';
 
 const City = () =>{
 
     const {value, setValue} = useContext(ThemeContext);
+    const [convertedValues , setConvertedValues] = useState({
+        sunset: '',
+        sunrise: '',
+        dt: ''
+    });
+
+    useState(() =>{
+        function convertData(unix){
+            let utc = new Date(unix * 1000);
+
+            let hours = utc.getHours();
+            let minutes = utc.getMinutes();
+
+            return `${hours}:${minutes}`;
+        }
+
+        setConvertedValues({
+            sunset: convertData(value.sys.sunset),
+            sunrise: convertData(value.sys.sunrise)
+        })
+    }, [value])
 
     return(
         <div className='main'>
-            <section>
-                <h1>
+            <hgroup>
+                <h1 className='text-center'>
                     {value.name}, {value.sys.country}
                 </h1>
-                <span className='blue-grey-text'>Dia da semana, </span>
-            </section>
+                <span>Dia da semana, {new Date(value.dt *1000).toDateString()}</span>
+            </hgroup>
 
-            <section>
-
+            <section className='principalInfo'>
                 <div>
                     <img src={`http://openweathermap.org/img/wn/${value.weather[0].icon}@2x.png`} />
                 </div>
 
-                <div className='d-flex text-center'>
+                <div className='d-flex flex-column flex-md-row text-center justify-content-around' style={{width: '100%'}}>
                     <div className='d-flex flex-column'>
                         <span>Minima</span> 
                         <div>
-                            {value.main.temp_min} ºC
+                            <h4>{value.main.temp_min} ºC</h4>
                         </div>
                     </div>
-                    <div className='d-flex flex-column'> 
+                    <div className='d-flex flex-column p-4'> 
                         <div>
-                            {value.main.temp} ºC
+                            <h1>{value.main.temp} ºC</h1>
                         </div>
                         <div>
-                            {value.weather[0].description} 
+                            <h4>{value.weather[0].description}</h4> 
                         </div>
                     </div>
                     <div className='d-flex flex-column'>
@@ -42,35 +63,37 @@ const City = () =>{
                             Máxima 
                         </span>
                         <div>
-                            {value.main.temp_max} ºC
+                            <h4>{value.main.temp_max} ºC</h4>
                         </div>
                     </div>
                 </div>
             </section>
-            <span className='p-1 border-bottom'></span>
-            <section>
-                <div className='d-flex'>
-                    <div>
+            
+            <hr />
+
+            <section className='otherInfos'>
+                <div>
+                    <div className='col-7 col-xl-3'>
                         Umidade 
                     </div>
-                    <div>
+                    <div className='col-1'>
                         {value.main.humidity}%
                     </div>
                 </div>
-                <div className='d-flex'>
-                    <div>
+                <div>
+                    <div className='col-7 col-xl-3'>
                         Nascer do sol 
                     </div>
-                    <div>
-                        {value.sys.sunrise}
+                    <div className='col-1'>
+                        {convertedValues.sunrise}
                     </div>
                 </div>
-                <div className='d-flex'>
-                    <div>
+                <div>
+                    <div className='col-7 col-xl-3'>
                         Por do sol 
                     </div>
-                    <div>
-                        {value.sys.sunset}
+                    <div className='col-1'>
+                        {convertedValues.sunset}
                     </div>
                 </div>
             </section>
