@@ -1,8 +1,13 @@
-import React,{useContext, useState} from 'react';
-import ThemeContext from "../../store/index";
+import React,{useContext, useState, useEffect} from 'react';
+import ThemeContext from "../../Store/index";
 
+import './Style.css';
 
-import './style.css';
+import WeatherOtherInfos from "../../Components/Containers/WeatherOtherInfos";
+
+import UnixToUTCHour from "../../Functions/UnixToUTCHour";
+import { Link } from 'react-router-dom';
+import { MDBIcon } from 'mdbreact';
 
 const City = () =>{
 
@@ -13,29 +18,26 @@ const City = () =>{
         dt: ''
     });
 
-    useState(() =>{
-        function convertData(unix){
-            let utc = new Date(unix * 1000);
-
-            let hours = utc.getHours();
-            let minutes = utc.getMinutes();
-
-            return `${hours}:${minutes}`;
-        }
-
+    useEffect(() =>{
         setConvertedValues({
-            sunset: convertData(value.sys.sunset),
-            sunrise: convertData(value.sys.sunrise)
+            sunset: UnixToUTCHour(value.sys.sunset),
+            sunrise: UnixToUTCHour(value.sys.sunrise),
+            dt: new Date(value.dt *1000).toDateString()
         })
     }, [value])
 
     return(
         <div className='main'>
+            <section>
+                <Link to='/' className='align-self-center align-self-md-start'>
+                    <MDBIcon icon='angle-left' /> Back
+                </Link>
+            </section>
             <hgroup>
                 <h1 className='text-center'>
                     {value.name}, {value.sys.country}
                 </h1>
-                <span>Dia da semana, {new Date(value.dt *1000).toDateString()}</span>
+                <span>Dia da semana, {convertedValues.dt}</span>
             </hgroup>
 
             <section className='principalInfo'>
@@ -44,13 +46,13 @@ const City = () =>{
                 </div>
 
                 <div className='d-flex flex-column flex-md-row text-center justify-content-around' style={{width: '100%'}}>
-                    <div className='d-flex flex-column'>
+                    <div>
                         <span>Minima</span> 
                         <div>
                             <h4>{value.main.temp_min} ºC</h4>
                         </div>
                     </div>
-                    <div className='d-flex flex-column p-4'> 
+                    <div className='p-4'> 
                         <div>
                             <h1>{value.main.temp} ºC</h1>
                         </div>
@@ -58,7 +60,7 @@ const City = () =>{
                             <h4>{value.weather[0].description}</h4> 
                         </div>
                     </div>
-                    <div className='d-flex flex-column'>
+                    <div>
                         <span>
                             Máxima 
                         </span>
@@ -72,30 +74,21 @@ const City = () =>{
             <hr />
 
             <section className='otherInfos'>
-                <div>
-                    <div className='col-7 col-xl-3'>
-                        Umidade 
-                    </div>
-                    <div className='col-1'>
-                        {value.main.humidity}%
-                    </div>
-                </div>
-                <div>
-                    <div className='col-7 col-xl-3'>
-                        Nascer do sol 
-                    </div>
-                    <div className='col-1'>
-                        {convertedValues.sunrise}
-                    </div>
-                </div>
-                <div>
-                    <div className='col-7 col-xl-3'>
-                        Por do sol 
-                    </div>
-                    <div className='col-1'>
-                        {convertedValues.sunset}
-                    </div>
-                </div>
+              
+                <WeatherOtherInfos 
+                    text='Umidade'
+                    value={`${value.main.humidity}%`}
+                />
+               
+                <WeatherOtherInfos 
+                    text='Nascer do sol'
+                    value={convertedValues.sunrise}
+                />
+                
+                <WeatherOtherInfos 
+                    text='Por do sol'
+                    value={convertedValues.sunset}
+                />
             </section>
         </div>
     )

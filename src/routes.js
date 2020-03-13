@@ -1,10 +1,10 @@
 import React,{useState} from 'react';
 import { BrowserRouter, Route, Redirect } from "react-router-dom";
 
-import Home from "./pages/Home/home";
-import City from "./pages/City/city";
+import Home from "./Pages/Home/Home";
+import City from "./Pages/City/City";
 
-import Context from "./store/index";
+import Context from "./Store/index";
 
 function Routes(){
     

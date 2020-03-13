@@ -4,3 +4,9 @@
     justify-content: center;
     align-items: center;
 }
+
+.Home>form{
+    animation: fade 0.9s;
+    overflow: hidden;
+}
+
